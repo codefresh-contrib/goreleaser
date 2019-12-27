@@ -27,8 +27,11 @@ function checkTrigger() {
     fi
 }
 
-getContextFromTrigger
-getTokenFromContext
+if [ -z "$GITHUB_TOKEN" ]; then
+    bold "GITHUB_TOKEN is not set, trying to get it from the git context of the current trigger..."
+    getContextFromTrigger
+    getTokenFromContext
+fi
 
 git reset --hard
 git clean -df
