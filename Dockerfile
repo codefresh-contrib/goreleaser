@@ -4,7 +4,9 @@ FROM alpine:3.11 as build
 
 RUN apk add curl wget 
 
-RUN curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh 
+ARG GORELEASER_VERSION=0.118.1
+
+RUN curl -L https://github.com/goreleaser/goreleaser/releases/download/v${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz | tar xz -C /bin/ 
 
 ARG CF_CLI_VERSION=v0.35.0
 
@@ -15,7 +17,7 @@ FROM golang:${GOLANG_VERSION}-alpine3.11 as runtime
 
 WORKDIR /step
 
-RUN apk add --no-cache go git jq libgcc libstdc++
+RUN apk add --no-cache bash go git jq libgcc libstdc++
 
 COPY --from=build /bin/codefresh /bin/codefresh
 COPY --from=build /bin/goreleaser /bin/goreleaser
